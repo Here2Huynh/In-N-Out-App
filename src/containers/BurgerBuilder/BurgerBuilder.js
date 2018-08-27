@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Aux from '../../hoc/Aux';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
+import Modal from '../../components/UI/Modal';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 
 const INGREDIENT_PRICES = {
     salad: .5,
@@ -23,7 +25,8 @@ class BurgerBuilder extends Component {
             meat: 0,
         },
         totalPrice: 4,
-        purchashable: false
+        purchashable: false,
+        purchasing: false
     }
 
     updatePurchaseState = (ingredients) => {
@@ -56,7 +59,7 @@ class BurgerBuilder extends Component {
         })
         
         this.updatePurchaseState(updatedIngredients);
-        console.log(this.state.purchashable)
+        // console.log(this.state.purchashable)
     }
 
     removeIngredientHandler = (type) => {
@@ -78,7 +81,14 @@ class BurgerBuilder extends Component {
         });
         
         this.updatePurchaseState(updatedIngredients);
-        console.log(this.state.purchashable)
+    }
+
+    purchaseHandler = () => {
+        this.setState({ purchasing : true })
+    }
+
+    purchaseCancelHandler = () => {
+        this.setState({ purchasing: false })
     }
 
     render() {
@@ -91,6 +101,13 @@ class BurgerBuilder extends Component {
 
         return(
             <Aux>
+                <Modal show={this.state.purchasing}
+                        modalClosed={this.purchaseCancelHandler}
+                > 
+                    <OrderSummary 
+                        ingredients={this.state.ingredients}
+                    />
+                </Modal>
                 <Burger ingredients={this.state.ingredients} />
                 <BuildControls 
                     ingredientAdded={this.addIngredientHandler}
@@ -98,6 +115,7 @@ class BurgerBuilder extends Component {
                     disabled={disabledInfo}
                     price={this.state.totalPrice}
                     purchasable={this.state.purchasable}
+                    ordered={this.purchaseHandler}
                 />
             </Aux>
         );
@@ -105,3 +123,5 @@ class BurgerBuilder extends Component {
 }
 
 export default BurgerBuilder;
+
+// general good practice of React is to have grandular focus components

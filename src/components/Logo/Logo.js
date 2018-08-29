@@ -9,3 +9,5 @@ const logo = (props) => (
 )
 
 export default logo;
+
+{/* <div className={classes.Logo} style={{height: props.height}} >  */}

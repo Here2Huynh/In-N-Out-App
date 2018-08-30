@@ -4,7 +4,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    background-color: #703b09;
+    background-color: #C6001E;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -19,6 +19,13 @@
 
 .Logo {
     height: 80%;
+}
+
+/* mobile view */
+@media (max-width: 499px) {
+    .DesktopOnly {
+        display: none;
+    }
 }
 
 /* always setup MOBILE first */

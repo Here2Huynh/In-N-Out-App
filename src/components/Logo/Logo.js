@@ -10,4 +10,5 @@ const logo = (props) => (
 
 export default logo;
 
+// eslint-disable-next-line
 {/* <div className={classes.Logo} style={{height: props.height}} >  */}

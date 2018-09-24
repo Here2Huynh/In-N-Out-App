@@ -18,21 +18,25 @@ const INGREDIENT_PRICES = {
 }
 
 class BurgerBuilder extends Component {
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {...}
-    // }
+
     state = {
-        ingredients: {
-            salad: 0,
-            bacon: 0,
-            cheese: 0,
-            meat: 0,
-        },
+        ingredients: null,
         totalPrice: 4,
         purchashable: false,
         purchasing: false,
-        loading: false
+        loading: false,
+        error: false
+    }
+
+    componentDidMount() {
+        axios.get('https://in-n-out-app.firebaseio.com/Ingredients.json')
+            .then(response => {
+                this.setState({ ingredients: response.data })
+                // console.log(response.data)
+            })
+            .catch(error => {
+                this.setState({ error: true })
+            })
     }
 
     updatePurchaseState = (ingredients) => {
@@ -114,7 +118,7 @@ class BurgerBuilder extends Component {
                 deliveryMethod: 'fastests'
             }
         }
-        axios.post('/orders', order)
+        axios.post('/orders.json', order)
             .then(response => 
                 this.setState({ loading: false, purchasing: false }))
             .catch(error => 
@@ -131,16 +135,36 @@ class BurgerBuilder extends Component {
             disabledInfo[key] = disabledInfo[key] <= 0 
         }
 
-        let orderSummary = <OrderSummary 
-            ingredients={this.state.ingredients}
-            purchaseCancelled={this.purchaseCancelHandler}
-            purchaseContinued={this.purchaseContinueHandler}
-            price={this.state.totalPrice}
-        />
+        let orderSummary = null; 
+
+        let burger = this.state.error ? <p style={{textAlign: 'center'}}>Ingredients can't be loaded</p> : <Spinner />;
+
+        if (this.state.ingredients) {
+            burger = (
+                <Aux>
+                    <Burger ingredients={this.state.ingredients} />
+    
+                    <BuildControls 
+                        ingredientAdded={this.addIngredientHandler}
+                        ingredientRemoved={this.removeIngredientHandler}
+                        disabled={disabledInfo}
+                        price={this.state.totalPrice}
+                        purchasable={this.state.purchasable}
+                        ordered={this.purchaseHandler} />
+                </Aux>
+            ); 
+            orderSummary = <OrderSummary 
+                ingredients={this.state.ingredients}
+                purchaseCancelled={this.purchaseCancelHandler}
+                purchaseContinued={this.purchaseContinueHandler}
+                price={this.state.totalPrice} />
+        }
 
         if (this.state.loading) {
             orderSummary = <Spinner />
         }
+
+        
         return (
             <Aux>
                 <Modal 
@@ -148,21 +172,13 @@ class BurgerBuilder extends Component {
                     modalClosed={this.purchaseCancelHandler} > 
                     {orderSummary}
                 </Modal>
-
-                <Burger ingredients={this.state.ingredients} />
-
-                <BuildControls 
-                    ingredientAdded={this.addIngredientHandler}
-                    ingredientRemoved={this.removeIngredientHandler}
-                    disabled={disabledInfo}
-                    price={this.state.totalPrice}
-                    purchasable={this.state.purchasable}
-                    ordered={this.purchaseHandler} />
+                {/* {console.log(this.state.ingredients)} */}
+                {burger}
             </Aux>
         );
     }
 }
 
-export default withErrorHandler(BurgerBuilder, axios) ;
+export default withErrorHandler( BurgerBuilder, axios ) ;
 
 // general good practice of React is to have grandular focus components

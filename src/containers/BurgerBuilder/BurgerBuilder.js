@@ -29,6 +29,7 @@ class BurgerBuilder extends Component {
     }
 
     componentDidMount() {
+        // console.log(this.props)
         axios.get('https://in-n-out-app.firebaseio.com/Ingredients.json')
             .then(response => {
                 this.setState({ ingredients: response.data })
@@ -102,27 +103,38 @@ class BurgerBuilder extends Component {
     }
 
     purchaseContinueHandler = () => {
-        // alert('You continue!')
-        this.setState({ loading: true })
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice,
-            customer: {
-                name: 'John Doe',
-                address: {
-                    street: '11 Test',
-                    zipCode: 123456,
-                    country: 'USA'
-                },
-                email: 'test@test.com',
-                deliveryMethod: 'fastests'
-            }
+        const queryParams = []
+        for ( let i in this.state.ingredients ) {
+            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]))
         }
-        axios.post('/orders.json', order)
-            .then(response => 
-                this.setState({ loading: false, purchasing: false }))
-            .catch(error => 
-            this.setState({ loading: false, purchasing: false }))
+        const queryString = queryParams.join('&');
+
+        this.props.history.push({
+            pathname: '/checkout',
+            search: '?' + queryString
+        })
+
+        // alert('You continue!')
+        // this.setState({ loading: true })
+        // const order = {
+        //     ingredients: this.state.ingredients,
+        //     price: this.state.totalPrice,
+        //     customer: {
+        //         name: 'John Doe',
+        //         address: {
+        //             street: '11 Test',
+        //             zipCode: 123456,
+        //             country: 'USA'
+        //         },
+        //         email: 'test@test.com',
+        //         deliveryMethod: 'fastests'
+        //     }
+        // }
+        // axios.post('/orders.json', order)
+        //     .then(response => 
+        //         this.setState({ loading: false, purchasing: false }))
+        //     .catch(error => 
+        //     this.setState({ loading: false, purchasing: false }))
         // firebase uses a mongoDB like db so its needs to be in json
     }
 

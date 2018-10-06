@@ -107,6 +107,7 @@ class BurgerBuilder extends Component {
         for ( let i in this.state.ingredients ) {
             queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]))
         }
+        queryParams.push('price=' + this.state.totalPrice)
         const queryString = queryParams.join('&');
 
         this.props.history.push({
@@ -114,28 +115,6 @@ class BurgerBuilder extends Component {
             search: '?' + queryString
         })
 
-        // alert('You continue!')
-        // this.setState({ loading: true })
-        // const order = {
-        //     ingredients: this.state.ingredients,
-        //     price: this.state.totalPrice,
-        //     customer: {
-        //         name: 'John Doe',
-        //         address: {
-        //             street: '11 Test',
-        //             zipCode: 123456,
-        //             country: 'USA'
-        //         },
-        //         email: 'test@test.com',
-        //         deliveryMethod: 'fastests'
-        //     }
-        // }
-        // axios.post('/orders.json', order)
-        //     .then(response => 
-        //         this.setState({ loading: false, purchasing: false }))
-        //     .catch(error => 
-        //     this.setState({ loading: false, purchasing: false }))
-        // firebase uses a mongoDB like db so its needs to be in json
     }
 
     render() {

@@ -8,7 +8,8 @@ import axios from '../../axios-orders';
 // import orderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
-
+import { connect } from 'react-redux'
+import * as actionTypes from '../../store/actions'
 
 const INGREDIENT_PRICES = {
     salad: .5,
@@ -30,14 +31,14 @@ class BurgerBuilder extends Component {
 
     componentDidMount() {
         // console.log(this.props)
-        axios.get('https://in-n-out-app.firebaseio.com/Ingredients.json')
-            .then(response => {
-                this.setState({ ingredients: response.data })
-                // console.log(response.data)
-            })
-            .catch(error => {
-                this.setState({ error: true })
-            })
+        // axios.get('https://in-n-out-app.firebaseio.com/Ingredients.json')
+        //     .then(response => {
+        //         this.setState({ ingredients: response.data })
+        //         // console.log(response.data)
+        //     })
+        //     .catch(error => {
+        //         this.setState({ error: true })
+        //     })
     }
 
     updatePurchaseState = (ingredients) => {
@@ -168,6 +169,14 @@ class BurgerBuilder extends Component {
             </Aux>
         );
     }
+}
+
+const mapStateToProps = state => {
+
+}
+
+const mapDispatchToProps = state => {
+
 }
 
 export default withErrorHandler( BurgerBuilder, axios ) ;

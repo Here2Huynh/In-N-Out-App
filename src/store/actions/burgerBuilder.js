@@ -31,7 +31,7 @@ export const fetchIngredientsFailed = () => {
 
 export const initIngredients = () => {
     return dispatch => {
-        axios.get('https://in-n-out-app.firebaseio.com/Ingredients')
+        axios.get('https://in-n-out-app.firebaseio.com/Ingredients.json')
             .then(response => {
                 dispatch(setIngredients(response.data))
             })
